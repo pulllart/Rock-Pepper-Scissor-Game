@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rock Paper Scissors</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #ece9e6, #ffffff);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      max-width: 800px;
+      width: 100%;
+      margin: 50px auto;
+      text-align: center;
+      padding: 40px;
+      background: #fff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 15px;
+    }
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 30px;
+      color: #333;
+    }
+    .game-container {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 30px;
+    }
+    .btn {
+      border: 3px solid #333;
+      border-radius: 50%;
+      background: linear-gradient(to right, #6a11cb, #2575fc);
+      padding: 30px;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.3s;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 120px;
+      height: 120px;
+    }
+    .btn:hover {
+      background: linear-gradient(to right, #2575fc, #6a11cb);
+      transform: scale(1.1);
+    }
+    .btn:active {
+      transform: scale(1);
+      background: #ff9800;
+    }
+    .game-image {
+      height: 80px;
+      width: 80px;
+    }
+    #result-display {
+      font-size: 2rem;
+      margin-bottom: 20px;
+      color: #333;
+    }
+    #move-display {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      color: #333;
+    }
+    #score-display {
+      font-size: 1.2rem;
+      color: #333;
+      margin-bottom: 20px;
+    }
+    .reset-btn {
+      padding: 15px;
+      font-weight: 500;
+      width: 150px;
+      background-color: #333;
+      color: #fff;
+      border: 2px solid #333;
+      cursor: pointer;
+      transition: background 0.3s, color 0.3s;
+      border-radius: 10px;
+      margin-top: 30px;
+    }
+    .reset-btn:hover {
+      background-color: #fff;
+      color: #333;
+    }
+    #date {
+      background: #333;
+      color: #fff;
+      padding: 15px;
+      margin-top: 20px;
+      font-size: 1.5rem;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Rock Paper Scissors</h1>
+    <div class="game-container">
+      <button onclick="playGame('rock');" class="rock btn">
+        <img class="game-image" src="rock.jpg" alt="Rock">
+      </button>
+      <button onclick="playGame('paper');" class="paper btn">
+        <img class="game-image" src="paper.jpg" alt="Paper">
+      </button>
+      <button onclick="playGame('scissors');" class="scissors btn">
+        <img class="game-image" src="scissors.jpg" alt="Scissors">
+      </button>
+    </div>
+    <p id="result-display"></p>
+    <p id="move-display">
+      You
+      <img class="game-image" src="rock.jpg" alt="Your move">
+      Computer
+      <img class="game-image" src="paper.jpg" alt="Computer's move">
+    </p>
+    <p id="score-display"></p>
+    <button onclick="resetGame();" class="reset-btn">Reset</button>
+    <p id="date">
+      <span id="hour">00</span>
+      <span>:</span>
+      <span id="minute">00</span>
+      <span>:</span>
+      <span id="second">00</span>
+    </p>
+  </div>
+  <script>
+    let score = { Wins: 0, Losses: 0, Ties: 0 };
+    let c;
+    let result;
+
+    function playGame(player) {
+      computerChoice();
+      if (player === 'rock') {
+        result = c === 'rock' ? 'tie' : c === 'paper' ? 'you lose' : 'you win';
+      } else if (player === 'paper') {
+        result = c === 'paper' ? 'tie' : c === 'scissors' ? 'you lose' : 'you win';
+      } else if (player === 'scissors') {
+        result = c === 'scissors' ? 'tie' : c === 'rock' ? 'you lose' : 'you win';
+      }
+
+      updateScore();
+
+      const scoreDisplay = document.getElementById('score-display');
+      scoreDisplay.innerHTML = `Wins: ${score.Wins}. Losses: ${score.Losses}. Ties: ${score.Ties}`;
+
+      const resultDisplay = document.getElementById('result-display');
+      resultDisplay.innerHTML = `${result}`;
+
+      const moveDisplay = document.getElementById('move-display');
+      moveDisplay.innerHTML = `
+        You
+        <img class="game-image" src="${player}.jpg" alt="Your move">
+        Computer
+        <img class="game-image" src="${c}.jpg" alt="Computer's move">
+      `;
+    }
+
+    function computerChoice() {
+      const cC = Math.floor(Math.random() * 3 + 1);
+      c = cC === 1 ? 'rock' : cC === 2 ? 'paper' : 'scissors';
+    }
+
+    function updateScore() {
+      if (result === 'you win') {
+        score.Wins++;
+      } else if (result === 'you lose') {
+        score.Losses++;
+      } else if (result === 'tie') {
+        score.Ties++;
+      }
+    }
+
+    function resetGame() {
+      score.Wins = 0;
+      score.Losses = 0;
+      score.Ties = 0;
+      const scoreDisplay = document.getElementById('score-display');
+      scoreDisplay.innerHTML = `Wins: ${score.Wins}. Losses: ${score.Losses}. Ties: ${score.Ties}`;
+    }
+
+    function updateTime() {
+      const getHour = document.getElementById('hour');
+      const minute = document.getElementById('minute');
+      const second = document.getElementById('second');
+      const now = new Date();
+      getHour.innerHTML = now.getHours().toString().padStart(2, '0');
+      minute.innerHTML = now.getMinutes().toString().padStart(2, '0');
+      second.innerHTML = now.getSeconds().toString().padStart(2, '0');
+    }
+
+    setInterval(updateTime, 1000);
+    updateTime();
+  </script>
+</body>
+</html>
